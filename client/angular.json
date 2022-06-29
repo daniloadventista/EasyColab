@@ -70,7 +70,8 @@
             "sslCert": "./ssl/server.crt",
             "sslKey": "./ssl/server.key",
             "ssl": true,
-            "browserTarget": "client:build"
+            "browserTarget": "client:build",
+            "disableHostCheck": true
           },
           "configurations": {
             "production": {

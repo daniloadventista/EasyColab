@@ -1,0 +1,67 @@
+<div class="row mb-4">
+    <div class="btn-group" name='container'>
+        <button class="btn btn-primary" btnRadio='Outbox' [(ngModel)]="container" 
+            (click)="loadSamples()">
+            <i class="fa fa-paper-plane"></i> My Sent Samples
+        </button>
+        <button class="btn btn-primary" btnRadio='Inbox' [(ngModel)]="container" 
+            (click)="loadSamples()">
+            <i class="fa fa-envelope-open"></i> Others
+        </button>        
+    </div>
+</div>
+
+<div class="row" *ngIf="samples?.length === 0">
+    <h3>No samples</h3>
+</div>
+
+<div class="row" *ngIf="samples?.length > 0">
+    <table class="table table-hover" style="cursor: pointer">
+        <tr>
+            <th style="width: 40%">Sample</th>
+            <th style="width: 20%">Sender</th>
+            <th style="width: 20%">Sent / Received</th>
+            <th style="width: 20%"></th>
+        </tr>
+        <tr [hidden]="loading" *ngFor="let sample of samples" 
+            routerLink='{{container === "Outbox" 
+                ? "/members/" + sample.product 
+                : "/members/" + sample.senderUsername}}' [queryParams]='{tab: 3}' >
+            <td>{{sample.id}}; {{sample.productId}}; {{sample.product}};</td>    
+            <td>
+                <div *ngIf="container === 'Outbox'">
+                    <img 
+                        class="img-circle rounded-circle mr-2"
+                        src="{{sample.senderPhotoUrl || './assets/user.png'}}" 
+                        alt="{{sample.senderUsername}}">
+                    <strong>{{sample.senderUsername | titlecase}}</strong>
+                </div> 
+                <div *ngIf="container !== 'Outbox'">
+                    <img 
+                        class="img-circle rounded-circle mr-2"
+                        src="{{sample.senderPhotoUrl || './assets/user.png'}}" 
+                        alt="{{sample.senderUsername}}">
+                    <strong>{{sample.senderUsername | titlecase}}</strong>
+                </div> 
+            </td>
+            <td>{{sample.created | timeago}}</td>
+            <td>
+                <button (click)="$event.stopPropagation()" (click)="deletesample(sample.id)" class='btn btn-danger'>Delete</button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="d-flex justify-content-center" *ngIf="pagination && !loading">
+    <pagination 
+        [boundaryLinks]="true" 
+        [totalItems]="pagination.totalItems"
+        [itemsPerPage]="pagination.itemsPerPage"
+        [(ngModel)]="pagination.currentPage"
+        (pageChanged)="pageChanged($event)"
+        previousText="&lsaquo;" 
+        nextText="&rsaquo;" 
+        firstText="&laquo;" 
+        lastText="&raquo;">
+</pagination>
+</div>
